@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import socket
 import threading
 
@@ -18,7 +17,7 @@ serversocket = socket.socket(
 # get local machine name
 host = "0.0.0.0"                        
 
-port = 9998                                           
+port = 9999                                         
 
 # bind to the port
 serversocket.bind((host, port))                      
@@ -31,11 +30,11 @@ player1,addr1 = serversocket.accept()
 print("Got a connection from %s" % str(addr1))
 player2,addr2 = serversocket.accept()
 print("Got a connection from %s" % str(addr1))
-print("Are you ready?")
-
 
 thread1 = threading.Thread(target=play, args=(player1, ))
 thread2 = threading.Thread(target=play, args=(player2, ))
+
+print("Are you ready?")
 
 thread1.start()
 thread2.start()
@@ -44,6 +43,9 @@ while True:
 	if readycount >= 2:
 		break
 
-print('great')
+print('Great!')
+
+
+
 thread1.join()
 thread2.join()
