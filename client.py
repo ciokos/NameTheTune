@@ -1,4 +1,4 @@
-#!/usr/bin/python3           # This is client.py file
+#!/usr/bin/python3
 
 import socket
 from getkey import getkey, keys
@@ -6,12 +6,12 @@ from getkey import getkey, keys
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 
 # get local machine name
-host = socket.gethostname()                           
+#host = socket.gethostname()                           
 
 port = 9998
 
 # connection to hostname on the port.
-s.connect((host, port))                               
+s.connect(("10.0.0.36", port))                               
 
 # Receive no more than 1024 bytes
 msg = 'ready'

@@ -1,4 +1,4 @@
-#!/usr/bin/python3           # This is server.py file
+#!/usr/bin/python3
 import socket
 import threading
 
@@ -16,12 +16,13 @@ serversocket = socket.socket(
 	        socket.AF_INET, socket.SOCK_STREAM) 
 
 # get local machine name
-host = socket.gethostname()                           
+host = "0.0.0.0"                        
 
 port = 9998                                           
 
 # bind to the port
-serversocket.bind((host, port))                                  
+serversocket.bind((host, port))                      
+#print(socket.gethostbyname((socket.getfqdn())))    
 
 print("server is waiting for players...")
 # queue up to 5 requests
