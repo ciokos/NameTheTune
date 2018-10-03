@@ -2,13 +2,33 @@ import socket
 import threading
 
 readycount = 0
+round_play = True
 
 def play(client):
    	msg = client.recv(1024)
    	global readycount
    	readycount = readycount + 1
    	print(msg.decode('ascii'))
-   	client.close()                   
+   	#client.close()
+
+def wait_for_first(client1, client2):
+	msg = client1.recv(1024)
+	global round_play
+	if round_play:
+		send(client1, client2, "you were faster!", "another player plays\npress space to continue...")
+		print(client1, " were faster")
+		round_play = False
+
+def send(client1, client2, text1, text2):
+	client1.send(text1.encode('ascii'))
+	client2.send(text2.encode('ascii'))
+
+def wait_for_players():
+	global readycount
+	while True:
+		if readycount >= 2:
+			readycount = 0
+			break
 
 # create a socket object
 serversocket = socket.socket(
@@ -21,7 +41,7 @@ port = 9999
 
 # bind to the port
 serversocket.bind((host, port))                      
-#print(socket.gethostbyname((socket.getfqdn())))    
+print(socket.gethostbyname((socket.getfqdn())))    
 
 print("server is waiting for players...")
 # queue up to 5 requests
@@ -31,21 +51,30 @@ print("Got a connection from %s" % str(addr1))
 player2,addr2 = serversocket.accept()
 print("Got a connection from %s" % str(addr1))
 
-thread1 = threading.Thread(target=play, args=(player1, ))
-thread2 = threading.Thread(target=play, args=(player2, ))
 
-print("Are you ready?")
+##### GAME #####
 
-thread1.start()
-thread2.start()
 
 while True:
-	if readycount >= 2:
-		break
+	thread1 = threading.Thread(target=play, args=(player1, ))
+	thread2 = threading.Thread(target=play, args=(player2, ))
+	thread1.start()
+	thread2.start()
+	send(player1, player2, "Are you ready?", "Are you ready?")
+	print("Are you ready?")
+	wait_for_players()
+	thread1.join()
+	thread2.join()
+	send(player1, player2, "Round start!", "Round start!")
+	thread3 = threading.Thread(target=wait_for_first, args=(player1, player2, ))
+	thread4 = threading.Thread(target=wait_for_first, args=(player2, player1, ))
+	thread3.start()
+	thread4.start()
+	thread3.join()
+	thread4.join()
+	round_play = True
 
-print('Great!')
 
 
 
-thread1.join()
-thread2.join()
+
