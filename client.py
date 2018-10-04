@@ -1,6 +1,18 @@
 import socket
 from getkey import getkey, keys
 import threading
+import sys, termios, tty, os, time
+
+def getch():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+ 
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
 
 def thrd_fnc():
 	msg = s.recv(1024)
@@ -17,7 +29,7 @@ def confirm():
 	msg = 'ready'
 	key = ''
 	while key != ' ':
-		key = getkey()
+		key = getch()
 	send(msg)
 	print(msg)
 
