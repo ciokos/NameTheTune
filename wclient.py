@@ -1,10 +1,5 @@
 import socket
-from getkey import getkey, keys
 import threading
-import sys, os, time
-import msvcrt
-import keyboard
-
 
 
 def thrd_fnc():

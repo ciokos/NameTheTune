@@ -23,7 +23,7 @@ class GuiPart:
         self.ready_btn = Button(master, textvariable=self.btntext, command=readyClick, width=10, height=2)
         exit_btn = Button(master, text="Exit", command=exitClick, width=10, height=2)
         text_label.pack(side=TOP)
-        self.ready_btn.place(x=220, y=110)
+        self.ready_btn.place(x=219.5, y=110)
         exit_btn.place(x=0, y=110)
         master.geometry("300x150")
         master.title("Name That Tune")
@@ -41,11 +41,13 @@ class GuiPart:
                 msg = json.loads(msg)
                 if self.state == 2:
                     self.text.set(self.text.get() + "\n\n" + msg['text'])
-                    self.btntext.set("Continue")
                 else:
                     self.text.set(msg['text'])
-                    self.btntext.set("Ready")
                 self.state = (msg['status'])
+                if self.state == 2:
+                    self.btntext.set("Continue")
+                else:
+                    self.btntext.set("Ready")
                 if self.state != 3:
                     self.ready_btn.config(state=NORMAL)
 
