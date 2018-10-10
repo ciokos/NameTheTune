@@ -14,10 +14,13 @@ class GuiPart:
         self.text.set("Game is about to start. \nPress 'Ready to continue'")
         self.state = 0
 
+        self.btntext = StringVar()
+        self.btntext.set("Ready")
+
         # Set up the GUI
         tFrame = Frame(master).pack(side=TOP)
         text_label = Label(tFrame, textvariable=self.text)
-        self.ready_btn = Button(master, text='Ready', command=readyClick, width=10, height=2)
+        self.ready_btn = Button(master, textVariable=self.btntext, command=readyClick, width=10, height=2)
         exit_btn = Button(master, text="Exit", command=exitClick, width=10, height=2)
         text_label.pack(side=TOP)
         self.ready_btn.place(x=220, y=110)
@@ -38,8 +41,10 @@ class GuiPart:
                 msg = json.loads(msg)
                 if self.state == 2:
                     self.text.set(self.text.get() + "\n\n" + msg['text'])
+                    self.btntext.set("Continue")
                 else:
                     self.text.set(msg['text'])
+                    self.btntext.set("Ready")
                 self.state = (msg['status'])
                 if self.state != 3:
                     self.ready_btn.config(state=NORMAL)
