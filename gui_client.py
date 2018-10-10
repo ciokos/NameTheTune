@@ -41,6 +41,8 @@ class GuiPart:
                 msg = json.loads(msg)
                 if self.state == 2:
                     self.text.set(self.text.get() + "\n\n" + msg['text'])
+                elif self.state == 3:
+                    self.text.set(self.state.get() + "\n\n" +  msg['text'])
                 else:
                     self.text.set(msg['text'])
                 self.state = (msg['status'])
