@@ -3,22 +3,24 @@ import threading
 import random
 import queue
 import socket
+import json
 
 
 class GuiPart:
     def __init__(self, master, queue, exitClick, readyClick, state):
         self.queue = queue
 
-        self.state = StringVar()
-        self.state.set(state)
+        self.text = StringVar()
+        self.text.set("Game is about to start. \nPress 'Ready to continue'")
+        self.state = 0
 
         # Set up the GUI
         tFrame = Frame(master).pack(side=TOP)
-        state_label = Label(tFrame, textvariable=self.state)
-        ready_btn = Button(master, text='Ready', command=readyClick, width=10, height=2)
+        text_label = Label(tFrame, textvariable=self.text)
+        self.ready_btn = Button(master, text='Ready', command=readyClick, width=10, height=2)
         exit_btn = Button(master, text="Exit", command=exitClick, width=10, height=2)
-        state_label.pack(side=TOP)
-        ready_btn.place(x=220, y=110)
+        text_label.pack(side=TOP)
+        self.ready_btn.place(x=220, y=110)
         exit_btn.place(x=0, y=110)
         master.geometry("300x150")
         master.title("Name That Tune")
@@ -33,7 +35,15 @@ class GuiPart:
                 # Check contents of message and do whatever is needed. As a
                 # simple test, print it (in real life, you would
                 # suitably update the GUI's display in a richer fashion).
-                self.state.set(msg)
+                msg = json.loads(msg)
+                if self.state == 2:
+                    self.text.set(self.text.get() + "\n\n" + msg['text'])
+                else:
+                    self.text.set(msg['text'])
+                self.state = (msg['status'])
+                if self.state != 3:
+                    self.ready_btn.config(state=NORMAL)
+
 
             except queue.Empty:
                 # just on general principles, although we don't
@@ -59,7 +69,7 @@ class ThreadedClient:
 
         # Init socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        host = "10.0.0.22"
+        host = "10.0.0.114"
 
         port = 9999
 
@@ -116,6 +126,7 @@ class ThreadedClient:
     def ready(self):
         text = 'ready'
         self.socket.send(text.encode('ascii'))
+        self.gui.ready_btn.config(state=DISABLED)
 
 
 
