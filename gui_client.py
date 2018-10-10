@@ -20,7 +20,7 @@ class GuiPart:
         # Set up the GUI
         tFrame = Frame(master).pack(side=TOP)
         text_label = Label(tFrame, textvariable=self.text)
-        self.ready_btn = Button(master, textVariable=self.btntext, command=readyClick, width=10, height=2)
+        self.ready_btn = Button(master, textvariable=self.btntext, command=readyClick, width=10, height=2)
         exit_btn = Button(master, text="Exit", command=exitClick, width=10, height=2)
         text_label.pack(side=TOP)
         self.ready_btn.place(x=220, y=110)
